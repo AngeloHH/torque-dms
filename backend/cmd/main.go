@@ -32,7 +32,7 @@ func main() {
 	)
 
 	// Cargar reglas de validación
-	if err := sharedDomain.LoadValidationRules("config/validation_rules.yml"); err != nil {
+	if err := sharedDomain.LoadValidationRules("settings/validation_rules.yml"); err != nil {
 		log.Fatal("Failed to load validation rules:", err)
 	}
 
