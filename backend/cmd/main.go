@@ -10,7 +10,8 @@ import (
 
 	"torque-dms/adapters/input/http"
 	"torque-dms/adapters/output/postgres/repositories"
-	"torque-dms/core/identity/services"
+	identityServices "torque-dms/core/identity/services"
+	inventoryServices "torque-dms/core/inventory/services"
 	sharedDomain "torque-dms/core/shared/domain"
 	"torque-dms/models"
 )
@@ -35,6 +36,7 @@ func main() {
 	if err := sharedDomain.LoadValidationRules("settings/validation_rules.yml"); err != nil {
 		log.Fatal("Failed to load validation rules:", err)
 	}
+	log.Println("Validation rules loaded")
 
 	// Conectar a la base de datos
 	db, err := gorm.Open(postgres.Open(databaseURL), &gorm.Config{})
@@ -49,20 +51,36 @@ func main() {
 	}
 	log.Println("Database migrated")
 
-	// Crear repositories
+	// Crear repositories - Identity
 	entityRepo := repositories.NewEntityRepository(db)
 	userRepo := repositories.NewUserRepository(db)
 	phoneRepo := repositories.NewPhoneRepository(db)
 	roleRepo := repositories.NewRoleRepository(db)
 	resourceRepo := repositories.NewResourceRepository(db)
 
-	// Crear services
-	entityService := services.NewEntityService(entityRepo, phoneRepo)
-	authService := services.NewAuthService(entityRepo, userRepo, phoneRepo, jwtSecret)
-	permissionService := services.NewPermissionService(roleRepo, resourceRepo)
+	// Crear repositories - Inventory
+	vehicleRepo := repositories.NewVehicleRepository(db)
+	photoRepo := repositories.NewVehiclePhotoRepository(db)
+	locationRepo := repositories.NewLocationRepository(db)
+
+	// Crear services - Identity
+	entityService := identityServices.NewEntityService(entityRepo, phoneRepo)
+	authService := identityServices.NewAuthService(entityRepo, userRepo, phoneRepo, jwtSecret)
+	permissionService := identityServices.NewPermissionService(roleRepo, resourceRepo)
+
+	// Crear services - Inventory
+	vehicleService := inventoryServices.NewVehicleService(vehicleRepo, photoRepo, locationRepo)
+	locationService := inventoryServices.NewLocationService(locationRepo, vehicleRepo)
 
 	// Crear router
-	router := http.NewRouter(authService, entityService, permissionService, jwtSecret)
+	router := http.NewRouter(
+		authService,
+		entityService,
+		permissionService,
+		vehicleService,
+		locationService,
+		jwtSecret,
+	)
 
 	// Iniciar servidor
 	log.Printf("Server starting on port %s", webPort)
