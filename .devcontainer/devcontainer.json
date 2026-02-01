@@ -1,0 +1,20 @@
+{
+  "name": "Go y Node",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "ash"
+      },
+      "extensions": [
+        "golang.go",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+  // Usamos root para evitar problemas de permisos al instalar cosas manualmente ahora
+  "remoteUser": "root"
+}
