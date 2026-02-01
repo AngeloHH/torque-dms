@@ -12,6 +12,7 @@ import (
 	"torque-dms/adapters/output/postgres/repositories"
 	identityServices "torque-dms/core/identity/services"
 	inventoryServices "torque-dms/core/inventory/services"
+	salesServices "torque-dms/core/sales/services"
 	sharedDomain "torque-dms/core/shared/domain"
 	"torque-dms/models"
 )
@@ -63,6 +64,16 @@ func main() {
 	photoRepo := repositories.NewVehiclePhotoRepository(db)
 	locationRepo := repositories.NewLocationRepository(db)
 
+	// Crear repositories - Sales
+	leadRepo := repositories.NewLeadRepository(db)
+	leadSourceRepo := repositories.NewLeadSourceRepository(db)
+	leadAssignmentRepo := repositories.NewLeadAssignmentRepository(db)
+	leadNoteRepo := repositories.NewLeadNoteRepository(db)
+	leadActivityRepo := repositories.NewLeadActivityRepository(db)
+	leadStepPresetRepo := repositories.NewLeadStepPresetRepository(db)
+	leadStepRepo := repositories.NewLeadStepRepository(db)
+	leadStepProgressRepo := repositories.NewLeadStepProgressRepository(db)
+
 	// Crear services - Identity
 	entityService := identityServices.NewEntityService(entityRepo, phoneRepo)
 	authService := identityServices.NewAuthService(entityRepo, userRepo, phoneRepo, jwtSecret)
@@ -72,6 +83,21 @@ func main() {
 	vehicleService := inventoryServices.NewVehicleService(vehicleRepo, photoRepo, locationRepo)
 	locationService := inventoryServices.NewLocationService(locationRepo, vehicleRepo)
 
+	// Crear services - Sales
+	leadService := salesServices.NewLeadService(
+		leadRepo,
+		leadSourceRepo,
+		leadAssignmentRepo,
+		leadNoteRepo,
+		leadActivityRepo,
+	)
+	stepService := salesServices.NewStepService(
+		leadStepPresetRepo,
+		leadStepRepo,
+		leadStepProgressRepo,
+		leadRepo,
+	)
+
 	// Crear router
 	router := http.NewRouter(
 		authService,
@@ -79,6 +105,8 @@ func main() {
 		permissionService,
 		vehicleService,
 		locationService,
+		leadService,
+		stepService,
 		jwtSecret,
 	)
 
