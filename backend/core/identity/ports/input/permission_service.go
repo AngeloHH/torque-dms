@@ -20,7 +20,16 @@ type CheckPermissionInput struct {
 	OwnerID    *uint
 }
 
+type RouteAccessResult struct {
+	Allowed        bool
+	Scope          domain.AccessScope
+	OwnershipField string
+}
+
 type PermissionService interface {
+	// Route access
+	CheckRouteAccess(entityID uint, method string, path string) (*RouteAccessResult, error)
+
 	// Roles
 	CreateRole(name string, description string) (*domain.Role, error)
 	GetRoles() ([]*domain.Role, error)

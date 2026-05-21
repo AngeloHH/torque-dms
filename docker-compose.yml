@@ -27,7 +27,7 @@ services:
     # Mágia: Docker inyecta TODAS las variables del .env dentro del contenedor de Go
     env_file:
       - .env 
-    command: ["tail", "-f", "/dev/null"]
+    command: ["go", "run", "./cmd"]
 
 volumes:
   postgres_data:

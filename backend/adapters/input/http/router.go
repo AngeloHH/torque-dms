@@ -169,11 +169,11 @@ func (r *Router) setupRoutes(jwtSecret string) {
 		protected.POST("/presets/:id/private", stepHandler.MakePresetPrivate)
 
 		// Preset Steps
-		protected.GET("/presets/:presetId/steps", stepHandler.GetSteps)
-		protected.POST("/presets/:presetId/steps", stepHandler.CreateStep)
-		protected.POST("/presets/:presetId/steps/:stepId/deactivate", stepHandler.DeactivateStep)
-		protected.POST("/presets/:presetId/steps/:stepId/activate", stepHandler.ActivateStep)
-		protected.DELETE("/presets/:presetId/steps/:stepId", stepHandler.DeleteStep)
+		protected.GET("/presets/:id/steps", stepHandler.GetSteps)
+		protected.POST("/presets/:id/steps", stepHandler.CreateStep)
+		protected.POST("/presets/:id/steps/:stepId/deactivate", stepHandler.DeactivateStep)
+		protected.POST("/presets/:id/steps/:stepId/activate", stepHandler.ActivateStep)
+		protected.DELETE("/presets/:id/steps/:stepId", stepHandler.DeleteStep)
 	}
 }
 

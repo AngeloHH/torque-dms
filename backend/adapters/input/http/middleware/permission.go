@@ -24,15 +24,26 @@ func (m *PermissionMiddleware) Check() gin.HandlerFunc {
 			return
 		}
 
-		// Obtener el resource basado en método y path
 		method := c.Request.Method
 		path := c.FullPath()
 
-		// Por ahora, permitir todo si está autenticado
-		// Después implementar la búsqueda del resource y verificación
-		_ = entityID
-		_ = method
-		_ = path
+		result, err := m.permissionService.CheckRouteAccess(entityID.(uint), method, path)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "permission check failed"})
+			c.Abort()
+			return
+		}
+
+		if !result.Allowed {
+			c.JSON(http.StatusForbidden, gin.H{"error": "insufficient permissions"})
+			c.Abort()
+			return
+		}
+
+		c.Set("access_scope", string(result.Scope))
+		if result.OwnershipField != "" {
+			c.Set("ownership_field", result.OwnershipField)
+		}
 
 		c.Next()
 	}

@@ -102,6 +102,29 @@ func (s *permissionService) AssignResourceToEntity(inp input.AssignResourceInput
 	return s.resourceRepo.AssignResourceToEntity(entityResource)
 }
 
+// Route access
+
+func (s *permissionService) CheckRouteAccess(entityID uint, method string, path string) (*input.RouteAccessResult, error) {
+	resource, err := s.resourceRepo.FindByMethodAndPattern(method, path)
+	if err != nil {
+		return &input.RouteAccessResult{
+			Allowed: true,
+			Scope:   domain.AccessScopeAll,
+		}, nil
+	}
+
+	scope, err := s.GetScope(entityID, resource.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &input.RouteAccessResult{
+		Allowed:        scope != domain.AccessScopeNone,
+		Scope:          scope,
+		OwnershipField: resource.OwnershipField,
+	}, nil
+}
+
 // Check
 
 func (s *permissionService) CanAccess(inp input.CheckPermissionInput) (bool, error) {

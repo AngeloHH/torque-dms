@@ -181,7 +181,7 @@ func (h *StepHandler) MakePresetPrivate(c *gin.Context) {
 // Steps
 
 func (h *StepHandler) CreateStep(c *gin.Context) {
-	presetID, err := strconv.ParseUint(c.Param("presetId"), 10, 32)
+	presetID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid preset id"})
 		return
@@ -209,7 +209,7 @@ func (h *StepHandler) CreateStep(c *gin.Context) {
 }
 
 func (h *StepHandler) GetSteps(c *gin.Context) {
-	presetID, err := strconv.ParseUint(c.Param("presetId"), 10, 32)
+	presetID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid preset id"})
 		return
