@@ -86,19 +86,18 @@ func (e *Entity) SetField(field string, value string) error {
 		"zip":           &e.Zip,
 	}
 
-	for key, ptr := range fields {
-		if key == "email" && value != "" && !isValidEmail(value) {
-			return errors.New("invalid email format")
-		}
-
-		if key == field {
-			*ptr = value
-			e.ModifiedAt = time.Now()
-			return nil
-		}
+	ptr, ok := fields[field]
+	if !ok {
+		return errors.New("invalid field")
 	}
 
-	return errors.New("invalid field")
+	if field == "email" && value != "" && !isValidEmail(value) {
+		return errors.New("invalid email format")
+	}
+
+	*ptr = value
+	e.ModifiedAt = time.Now()
+	return nil
 }
 
 func (e *Entity) SetAsSystemUser() {
