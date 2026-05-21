@@ -71,9 +71,9 @@ type Role struct {
 
 type RoleResource struct {
 	ID         uint        `gorm:"primaryKey" json:"id"`
-	RoleID     uint        `json:"role_id"`
+	RoleID     uint        `gorm:"uniqueIndex:idx_role_resource" json:"role_id"`
 	Role       Role        `gorm:"foreignKey:RoleID" json:"-"`
-	ResourceID uint        `json:"resource_id"`
+	ResourceID uint        `gorm:"uniqueIndex:idx_role_resource" json:"resource_id"`
 	Resource   Resource    `gorm:"foreignKey:ResourceID" json:"resource"`
 	Scope      AccessScope `gorm:"default:'none'" json:"scope"`
 	CreatedAt  time.Time   `json:"created_at"`
@@ -81,9 +81,9 @@ type RoleResource struct {
 
 type EntityResource struct {
 	ID         uint        `gorm:"primaryKey" json:"id"`
-	EntityID   uint        `json:"entity_id"`
+	EntityID   uint        `gorm:"uniqueIndex:idx_entity_resource" json:"entity_id"`
 	Entity     Entity      `gorm:"foreignKey:EntityID" json:"-"`
-	ResourceID uint        `json:"resource_id"`
+	ResourceID uint        `gorm:"uniqueIndex:idx_entity_resource" json:"resource_id"`
 	Resource   Resource    `gorm:"foreignKey:ResourceID" json:"resource"`
 	Scope      AccessScope `gorm:"default:'none'" json:"scope"`
 	AssignedBy uint        `json:"assigned_by"`

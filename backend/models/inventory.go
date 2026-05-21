@@ -14,9 +14,9 @@ type VehicleModel3D struct {
 
 type VehicleModelZone struct {
 	ID        uint           `gorm:"primaryKey" json:"id"`
-	Model3DID uint           `json:"model_3d_id"`
+	Model3DID uint           `gorm:"uniqueIndex:idx_model3d_code" json:"model_3d_id"`
 	Model3D   VehicleModel3D `gorm:"foreignKey:Model3DID" json:"-"`
-	Code      string         `json:"code"`
+	Code      string         `gorm:"uniqueIndex:idx_model3d_code" json:"code"`
 	Name      string         `json:"name"`
 	MeshID    string         `json:"mesh_id"`
 	CreatedAt time.Time      `json:"created_at"`

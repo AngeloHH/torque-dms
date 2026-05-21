@@ -58,9 +58,9 @@ type LeadStep struct {
 
 type LeadStepProgress struct {
 	ID          uint       `gorm:"primaryKey" json:"id"`
-	LeadID      uint       `json:"lead_id"`
+	LeadID      uint       `gorm:"uniqueIndex:idx_lead_step" json:"lead_id"`
 	Lead        Lead       `gorm:"foreignKey:LeadID" json:"-"`
-	StepID      uint       `json:"step_id"`
+	StepID      uint       `gorm:"uniqueIndex:idx_lead_step" json:"step_id"`
 	Step        LeadStep   `gorm:"foreignKey:StepID" json:"step"`
 	Status      StepStatus `gorm:"default:'pending'" json:"status"`
 	StartedAt   *time.Time `json:"started_at"`

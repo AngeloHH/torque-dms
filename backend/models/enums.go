@@ -119,6 +119,8 @@ const (
 	PerspRear          PhotoPerspective = "rear"
 	PerspLeftSide      PhotoPerspective = "left_side"
 	PerspRightSide     PhotoPerspective = "right_side"
+	PerspTop           PhotoPerspective = "top"
+	PerspBottom        PhotoPerspective = "bottom"
 	PerspInteriorFront PhotoPerspective = "interior_front"
 	PerspInteriorRear  PhotoPerspective = "interior_rear"
 	PerspDashboard     PhotoPerspective = "dashboard"
